@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HelpingHands — community requests and neighborhood shops</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16211C; --forest:#1F4332; --sage:#7FA18C; --sage-bg:#E6EDE8;
+    --paper:#F4F5F3; --card:#FFFFFF; --amber:#C8871A; --amber-bg:#FBF1DE;
+    --brick:#8F432B; --slate:#5E6B65; --line:#DDE2DE;
+    --display:'Bricolage Grotesque',sans-serif; --body:'Public Sans',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--paper);font-family:var(--body);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  button{font-family:var(--body);cursor:pointer;border:none;background:none;color:inherit;}
+  :focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:3px;}
+
+  .nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line);}
+  .nav-in{max-width:1180px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;gap:28px;}
+  .mark{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.02em;}
+  .mark span{color:var(--sage);}
+  .nav-links{display:flex;gap:4px;margin-left:auto;}
+  .nav-links button{padding:9px 15px;border-radius:999px;font-size:14.5px;font-weight:500;color:var(--slate);}
+  .nav-links button:hover{background:var(--sage-bg);color:var(--forest);}
+  .nav-links button.on{background:var(--forest);color:#fff;}
+  .me{width:36px;height:36px;border-radius:50%;background:var(--forest);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex-shrink:0;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px 80px;}
+  .view{display:none;}
+  .view.on{display:block;}
+
+  .btn{display:inline-block;padding:13px 24px;border-radius:3px;font-size:15px;font-weight:600;text-align:center;}
+  .btn-pri{background:var(--forest);color:#fff;}
+  .btn-pri:hover{background:#163325;}
+  .btn-sec{background:transparent;color:var(--forest);border:1.5px solid var(--forest);}
+  .btn-sec:hover{background:var(--sage-bg);}
+  .btn-row{display:flex;gap:12px;flex-wrap:wrap;}
+
+  .page-head{margin:40px 0 28px;}
+  .page-head h2{font-family:var(--display);font-size:clamp(26px,3vw,34px);font-weight:600;letter-spacing:-.022em;margin:0 0 10px;}
+  .page-head p{font-size:16px;line-height:1.6;color:var(--slate);margin:0;max-width:62ch;}
+
+  /* ---- hero ---- */
+  .hero{margin:40px 0 44px;display:grid;grid-template-columns:1.15fr .85fr;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--card);}
+  .hero-l{padding:44px;}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--brick);font-weight:600;margin-bottom:18px;}
+  .pulse{width:7px;height:7px;border-radius:50%;background:var(--brick);}
+  .hero h1{font-family:var(--display);font-weight:600;font-size:clamp(28px,3.4vw,42px);line-height:1.08;letter-spacing:-.025em;margin:0 0 18px;max-width:17ch;}
+  .hero p{font-size:16.5px;line-height:1.6;color:var(--slate);margin:0 0 24px;max-width:46ch;}
+  .hero-meta{display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;color:var(--slate);margin-bottom:26px;}
+  .hero-meta b{color:var(--ink);font-weight:600;}
+  .hero-r{background:var(--sage-bg);padding:44px 38px;display:flex;flex-direction:column;justify-content:center;}
+  .ask-label{font-size:13px;font-weight:600;color:var(--forest);margin-bottom:14px;}
+  .ask{display:flex;align-items:baseline;gap:10px;}
+  .ask-n{font-family:var(--display);font-size:40px;font-weight:600;letter-spacing:-.02em;}
+  .ask-of{font-size:15px;color:var(--slate);}
+  .bar{height:7px;background:#fff;border-radius:999px;overflow:hidden;margin:14px 0 10px;}
+  .bar i{display:block;height:100%;background:var(--forest);border-radius:999px;}
+  .bar-note{font-size:13px;color:var(--slate);margin-bottom:22px;}
+
+  .board-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:14px;}
+  .board-head h2{font-family:var(--display);font-size:25px;font-weight:600;letter-spacing:-.02em;margin:0;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{padding:7px 15px;border-radius:999px;border:1px solid var(--line);font-size:13.5px;color:var(--slate);background:var(--card);}
+  .chip:hover{border-color:var(--sage);color:var(--forest);}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .board{column-count:3;column-gap:20px;}
+  .need{break-inside:avoid;margin-bottom:20px;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:22px;display:block;width:100%;text-align:left;}
+  .need:hover{border-color:var(--sage);}
+  .need-top{display:flex;align-items:center;gap:9px;margin-bottom:13px;}
+  .cat{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:3px;background:var(--sage-bg);color:var(--forest);}
+  .cat.urgent{background:#F6E6E0;color:var(--brick);}
+  .ago{font-size:12.5px;color:var(--slate);margin-left:auto;}
+  .need h3{font-family:var(--display);font-size:19px;font-weight:600;line-height:1.22;letter-spacing:-.015em;margin:0 0 9px;}
+  .need p{font-size:14.5px;line-height:1.55;color:var(--slate);margin:0 0 16px;}
+  .need-foot{display:flex;align-items:center;gap:10px;padding-top:14px;border-top:1px solid var(--line);}
+  .who{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);}
+  .dot{width:22px;height:22px;border-radius:50%;background:var(--sage);flex-shrink:0;}
+  .dot.anon{background:var(--line);}
+  .need-go{margin-left:auto;font-size:13.5px;font-weight:600;color:var(--forest);}
+  .fulfil{font-size:12.5px;color:var(--amber);font-weight:600;margin-bottom:12px;display:block;}
+
+  /* ---- shops ---- */
+  .shops{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:20px;}
+  .shop{background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:hidden;text-align:left;display:block;width:100%;}
+  .shop:hover{border-color:var(--sage);}
+  .shop-band{height:84px;background:linear-gradient(118deg,#1F4332,#3C6B53);display:flex;align-items:flex-end;padding:14px 20px;}
+  .shop-band.b2{background:linear-gradient(118deg,#8F432B,#B5684A);}
+  .shop-band.b3{background:linear-gradient(118deg,#8A6A1E,#C8871A);}
+  .shop-band.b4{background:linear-gradient(118deg,#2E4A5C,#4E7389);}
+  .shop-kind{font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:3px;}
+  .shop-body{padding:20px;}
+  .shop h3{font-family:var(--display);font-size:20px;font-weight:600;letter-spacing:-.015em;margin:0 0 5px;}
+  .shop-addr{font-size:13.5px;color:var(--slate);margin:0 0 14px;}
+  .shop-stats{display:flex;gap:18px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--slate);}
+  .shop-stats b{display:block;font-family:var(--display);font-size:18px;font-weight:600;color:var(--ink);}
+  .verified{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--forest);font-weight:600;margin-top:10px;}
+  .tick{width:15px;height:15px;border-radius:50%;background:var(--forest);color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;}
+
+  /* ---- shop detail / basket ---- */
+  .detail{display:grid;grid-template-columns:1.4fr .9fr;gap:34px;margin-top:38px;align-items:start;}
+  .items{background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+  .item{display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid var(--line);}
+  .item:last-child{border-bottom:none;}
+  .item-pic{width:46px;height:46px;border-radius:3px;background:var(--sage-bg);flex-shrink:0;}
+  .item-txt{flex:1;}
+  .item-txt h4{font-size:15.5px;font-weight:600;margin:0 0 3px;}
+  .item-txt p{font-size:13px;color:var(--slate);margin:0;}
+  .item-price{font-family:var(--display);font-size:17px;font-weight:600;margin-right:4px;}
+  .add{padding:8px 15px;border-radius:3px;border:1.5px solid var(--forest);color:var(--forest);font-size:13.5px;font-weight:600;}
+  .add:hover{background:var(--sage-bg);}
+  .add.in{background:var(--forest);color:#fff;}
+
+  .basket{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:24px;position:sticky;top:90px;}
+  .basket h3{font-family:var(--display);font-size:20px;font-weight:600;margin:0 0 4px;letter-spacing:-.015em;}
+  .basket > p{font-size:13.5px;color:var(--slate);margin:0 0 18px;line-height:1.5;}
+  .basket-line{display:flex;justify-content:space-between;font-size:14px;padding:9px 0;border-bottom:1px solid var(--line);}
+  .basket-tot{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0 20px;}
+  .basket-tot span{font-size:14px;color:var(--slate);}
+  .basket-tot b{font-family:var(--display);font-size:26px;font-weight:600;}
+
+  /* ---- pickup pass ---- */
+  .pass-wrap{max-width:430px;margin:44px auto 0;}
+  .pass{background:var(--card);border-radius:6px;overflow:hidden;border:1px solid var(--line);}
+  .pass-top{background:var(--forest);color:#fff;padding:26px 28px 24px;}
+  .pass-top h3{font-family:var(--display);font-size:22px;font-weight:600;margin:0 0 4px;letter-spacing:-.015em;}
+  .pass-top p{font-size:13.5px;color:#B9D0C2;margin:0;}
+  .pass-code{padding:30px 28px;text-align:center;border-bottom:1px dashed var(--line);}
+  .pass-code .lbl{font-size:13px;color:var(--slate);margin-bottom:10px;}
+  .pass-code .code{font-family:var(--display);font-size:46px;font-weight:800;letter-spacing:.1em;line-height:1;}
+  .pass-code .sub{font-size:13px;color:var(--slate);margin-top:12px;}
+  .pass-items{padding:22px 28px;}
+  .pass-items h4{font-size:13px;font-weight:600;color:var(--slate);margin:0 0 12px;}
+  .pass-item{display:flex;justify-content:space-between;font-size:14.5px;padding:7px 0;}
+  .pass-foot{padding:20px 28px;background:var(--sage-bg);font-size:13.5px;line-height:1.6;color:var(--forest);}
+
+  .note{background:var(--amber-bg);border-left:4px solid var(--amber);padding:18px 20px;border-radius:0 3px 3px 0;margin:26px 0;}
+  .note h4{font-size:14.5px;font-weight:600;margin:0 0 7px;color:#7A5410;}
+  .note p{font-size:13.5px;line-height:1.6;color:#6B4D18;margin:0;}
+
+  /* ---- merchant ---- */
+  .merch{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin:30px 0 34px;}
+  .mstat{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:20px;}
+  .mstat b{display:block;font-family:var(--display);font-size:30px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px;}
+  .mstat span{font-size:13.5px;color:var(--slate);}
+  .queue{background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+  .q-head{display:flex;padding:13px 22px;background:var(--sage-bg);font-size:12.5px;font-weight:600;color:var(--forest);}
+  .q-row{display:flex;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line);font-size:14.5px;}
+  .q-row:last-child{border-bottom:none;}
+  .q-code{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.05em;width:110px;flex-shrink:0;}
+  .q-items{flex:1;color:var(--slate);}
+  .q-when{width:130px;color:var(--slate);font-size:13.5px;}
+  .q-act{padding:8px 15px;border-radius:3px;background:var(--forest);color:#fff;font-size:13px;font-weight:600;}
+  .q-act.done{background:var(--sage-bg);color:var(--forest);}
+
+  @media(max-width:980px){
+    .hero{grid-template-columns:1fr;}
+    .board{column-count:2;}
+    .detail{grid-template-columns:1fr;}
+    .basket{position:static;}
+  }
+  @media(max-width:640px){
+    .board{column-count:1;}
+    .nav-in{padding:14px 18px;gap:12px;flex-wrap:wrap;}
+    .nav-links button{padding:8px 11px;font-size:13.5px;}
+    .wrap{padding:0 18px 60px;}
+    .hero-l,.hero-r{padding:28px 24px;}
+    .q-when{display:none;}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="mark">helping<span>hands</span></div>
+    <div class="nav-links">
+      <button class="on" data-v="board">Requests</button>
+      <button data-v="shops">Shops</button>
+      <button data-v="pass">Your pickup</button>
+      <button data-v="merchant">For businesses</button>
+    </div>
+    <div class="me">BC</div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ================= BOARD ================= -->
+<section class="view on" id="v-board">
+  <div class="hero">
+    <div class="hero-l">
+      <div class="hero-eyebrow"><span class="pulse"></span>Closest to being met</div>
+      <h1>A crib and a month of diapers, Bed-Stuy</h1>
+      <p>Baby came three weeks early and we weren't ready. We have the car seat. We need somewhere safe for her to sleep and enough diapers to get through to my next paycheck.</p>
+      <div class="hero-meta">
+        <div><b>4</b> people helping</div>
+        <div>Posted <b>2 hours ago</b></div>
+        <div>Needed by <b>Friday</b></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-pri" data-v="shop-detail">Buy from a local shop</button>
+        <button class="btn btn-sec">Read the full post</button>
+      </div>
+    </div>
+    <div class="hero-r">
+      <div class="ask-label">What's still needed</div>
+      <div class="ask"><div class="ask-n">$140</div><div class="ask-of">of $320</div></div>
+      <div class="bar"><i style="width:56%"></i></div>
+      <div class="bar-note">Crib covered by a neighbor on Tuesday. Diapers still open.</div>
+      <button class="btn btn-pri" data-v="shop-detail" style="width:100%">Cover the rest</button>
+    </div>
+  </div>
+
+  <div class="board-head">
+    <h2>47 open requests near you</h2>
+    <div class="chips">
+      <button class="chip on">Everything</button>
+      <button class="chip">Food</button>
+      <button class="chip">Kids</button>
+      <button class="chip">Transit</button>
+      <button class="chip">Housing</button>
+      <button class="chip">Work</button>
+    </div>
+  </div>
+
+  <div class="board">
+    <button class="need" data-v="shop-detail">
+      <div class="need-top"><span class="cat urgent">Transit</span><span class="ago">20 min ago</span></div>
+      <h3>Two weeks of OMNY so I can get to the new job</h3>
+      <p>Started Monday at a warehouse in Maspeth. First check is the 14th. I can walk part of it but not all of it.</p>
+      <div class="need-foot"><div class="who"><span class="dot"></span>Marisol</div><span class="need-go">$68 needed</span></div>
+    </button>
+
+    <button class="need" data-v="shop-detail">
+      <div class="need-top"><span class="cat">Food</span><span class="ago">1 hour ago</span></div>
+      <span class="fulfil">Pick up at Fine Fare on Nostrand</span>
+      <h3>Lost SNAP under the new work rules</h3>
+      <p>Got a compliance notice I'm appealing — I work 18 hours, not 20. Reapplying Oct 1 but that's three weeks of groceries I don't have. Two kids, 6 and 9.</p>
+      <div class="need-foot"><div class="who"><span class="dot anon"></span>Anonymous</div><span class="need-go">$210 needed</span></div>
+    </button>
+
+    <button class="need" data-v="shop-detail">
+      <div class="need-top"><span class="cat">Work</span><span class="ago">5 hours ago</span></div>
+      <span class="fulfil">Pick up at Atlantic Workwear</span>
+      <h3>Steel-toe boots, size 11, for a site job starting Monday</h3>
+      <p>Job is confirmed. Foreman won't let me on site without them.</p>
+      <div class="need-foot"><div class="who"><span class="dot"></span>Ray</div><span class="need-go">$90 needed</span></div>
+    </button>
+
+    <button class="need" data-v="shop-detail">
+      <div class="need-top"><span class="cat">Kids</span><span class="ago">3 hours ago</span></div>
+      <h3>Winter coat, boys size 10</h3>
+      <p>He outgrew last year's. Gently used is completely fine — better, honestly.</p>
+      <div class="need-foot"><div class="who"><span class="dot"></span>Devon</div><span class="need-go">Item</span></div>
+    </button>
+
+    <button class="need" data-v="shop-detail">
+      <div class="need-top"><span class="cat">Food</span><span class="ago">Yesterday</span></div>
+      <span class="fulfil">Pick up at Lucy's Pharmacy</span>
+      <h3>Diapers, size 2, and formula</h3>
+      <p>Anything helps and I'll pay it forward when I'm back on my feet.</p>
+      <div class="need-foot"><div class="who"><span class="dot"></span>Teresa</div><span class="need-go">$54 needed</span></div>
+    </button>
+  </div>
+</section>
+
+<!-- ================= SHOPS ================= -->
+<section class="view" id="v-shops">
+  <div class="page-head">
+    <h2>Shops in the neighborhood</h2>
+    <p>When you give through a local business, the money stays on the block. The shop gets a real sale, your neighbor picks up in person, and nobody exchanges an address. Every business here is verified and paid within two business days.</p>
+  </div>
+
+  <div class="shops">
+    <button class="shop" data-v="shop-detail">
+      <div class="shop-band"><span class="shop-kind">Grocery</span></div>
+      <div class="shop-body">
+        <h3>Fine Fare Supermarket</h3>
+        <p class="shop-addr">Nostrand Ave &amp; Hancock St · open until 10pm</p>
+        <div class="verified"><span class="tick">&#10003;</span>Verified business · 14 years on the block</div>
+        <div class="shop-stats">
+          <div><b>86</b>orders filled</div>
+          <div><b>$4,210</b>received</div>
+          <div><b>SNAP</b>also accepted</div>
+        </div>
+      </div>
+    </button>
+
+    <button class="shop" data-v="shop-detail">
+      <div class="shop-band b2"><span class="shop-kind">Workwear</span></div>
+      <div class="shop-body">
+        <h3>Atlantic Workwear</h3>
+        <p class="shop-addr">Atlantic Ave &amp; Classon · open until 7pm</p>
+        <div class="verified"><span class="tick">&#10003;</span>Verified business · family owned</div>
+        <div class="shop-stats">
+          <div><b>31</b>orders filled</div>
+          <div><b>$2,780</b>received</div>
+          <div><b>Boots</b>specialty</div>
+        </div>
+      </div>
+    </button>
+
+    <button class="shop" data-v="shop-detail">
+      <div class="shop-band b3"><span class="shop-kind">Pharmacy</span></div>
+      <div class="shop-body">
+        <h3>Lucy's Pharmacy</h3>
+        <p class="shop-addr">Fulton St &amp; Marcy Ave · open until 9pm</p>
+        <div class="verified"><span class="tick">&#10003;</span>Verified business · independent</div>
+        <div class="shop-stats">
+          <div><b>52</b>orders filled</div>
+          <div><b>$1,940</b>received</div>
+          <div><b>Baby</b>supplies</div>
+        </div>
+      </div>
+    </button>
+
+    <button class="shop" data-v="shop-detail">
+      <div class="shop-band b4"><span class="shop-kind">Hardware</span></div>
+      <div class="shop-body">
+        <h3>Bedford True Value</h3>
+        <p class="shop-addr">Bedford Ave &amp; Quincy St · open until 6pm</p>
+        <div class="verified"><span class="tick">&#10003;</span>Verified business · 22 years on the block</div>
+        <div class="shop-stats">
+          <div><b>19</b>orders filled</div>
+          <div><b>$1,105</b>received</div>
+          <div><b>Space heaters</b>in stock</div>
+        </div>
+      </div>
+    </button>
+  </div>
+</section>
+
+<!-- ================= SHOP DETAIL ================= -->
+<section class="view" id="v-shop-detail">
+  <div class="page-head">
+    <h2>Fine Fare Supermarket</h2>
+    <p>Nostrand Ave &amp; Hancock St · open until 10pm · a two-minute walk from the person who posted</p>
+  </div>
+
+  <div class="detail">
+    <div>
+      <div class="items">
+        <div class="item">
+          <div class="item-pic"></div>
+          <div class="item-txt"><h4>Week of groceries, family of three</h4><p>Staples box assembled by the store · feeds three for seven days</p></div>
+          <div class="item-price">$72</div>
+          <button class="add">Add</button>
+        </div>
+        <div class="item">
+          <div class="item-pic"></div>
+          <div class="item-txt"><h4>Diapers, size 2 · case of 164</h4><p>Store brand · roughly one month</p></div>
+          <div class="item-price">$38</div>
+          <button class="add in">Added</button>
+        </div>
+        <div class="item">
+          <div class="item-pic"></div>
+          <div class="item-txt"><h4>Infant formula · 2 containers</h4><p>Similac Advance, 12.4oz</p></div>
+          <div class="item-price">$54</div>
+          <button class="add">Add</button>
+        </div>
+        <div class="item">
+          <div class="item-pic"></div>
+          <div class="item-txt"><h4>Fresh produce bundle</h4><p>Whatever's good that week, chosen by the store</p></div>
+          <div class="item-price">$25</div>
+          <button class="add">Add</button>
+        </div>
+        <div class="item">
+          <div class="item-pic"></div>
+          <div class="item-txt"><h4>Open amount</h4><p>Store credit toward anything except alcohol and tobacco</p></div>
+          <div class="item-price">You pick</div>
+          <button class="add">Add</button>
+        </div>
+      </div>
+
+      <div class="note">
+        <h4>What the person receiving this will see</h4>
+        <p>A pickup code on their phone, the store name, and the hours. They will not see your name unless you choose to add it. They will never see your address, and you will never see theirs.</p>
+      </div>
+    </div>
+
+    <div class="basket">
+      <h3>Your basket</h3>
+      <p>Paid now, collected by your neighbor within seven days.</p>
+      <div class="basket-line"><span>Diapers, size 2 · case</span><span>$38</span></div>
+      <div class="basket-line"><span>Platform fee</span><span>$0</span></div>
+      <div class="basket-tot"><span>Fine Fare receives</span><b>$38</b></div>
+      <button class="btn btn-pri" style="width:100%;margin-bottom:10px" data-v="pass">Buy and send the code</button>
+      <button class="btn btn-sec" style="width:100%" data-v="shops">Choose a different shop</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PICKUP PASS ================= -->
+<section class="view" id="v-pass">
+  <div class="pass-wrap">
+    <div class="page-head" style="margin-bottom:22px">
+      <h2 style="font-size:28px">Ready for pickup</h2>
+      <p style="font-size:15px">Show this at the counter. It looks like any other mobile order.</p>
+    </div>
+
+    <div class="pass">
+      <div class="pass-top">
+        <h3>Fine Fare Supermarket</h3>
+        <p>Nostrand Ave &amp; Hancock St · open until 10pm today</p>
+      </div>
+      <div class="pass-code">
+        <div class="lbl">Pickup code</div>
+        <div class="code">K4 7Q</div>
+        <div class="sub">Collect by Tuesday, Oct 14</div>
+      </div>
+      <div class="pass-items">
+        <h4>Waiting for you</h4>
+        <div class="pass-item"><span>Diapers, size 2 · case of 164</span><span style="color:var(--slate)">1</span></div>
+        <div class="pass-item"><span>Week of groceries, family of three</span><span style="color:var(--slate)">1</span></div>
+      </div>
+      <div class="pass-foot">
+        The cashier sees an order number and the word <b>paid</b>. Nothing on their screen or yours says donation, charity, or free. You can bring someone with you, or send someone in your place using the same code.
+      </div>
+    </div>
+
+    <div class="note">
+      <h4>If you can't make it by Tuesday</h4>
+      <p>Tap "Need more time" and the code extends another seven days, no questions and no one notified. If it expires unused, the money goes back to the person who gave it, not to us.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-sec">Need more time</button>
+      <button class="btn btn-sec">Send someone in my place</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MERCHANT ================= -->
+<section class="view" id="v-merchant">
+  <div class="page-head">
+    <h2>Fine Fare Supermarket</h2>
+    <p>Your orders are prepaid before anyone walks in. Set items out when a code is redeemed, and payout lands in your account every Tuesday and Friday.</p>
+  </div>
+
+  <div class="merch">
+    <div class="mstat"><b>7</b><span>Codes waiting to be collected</span></div>
+    <div class="mstat"><b>$412</b><span>Prepaid, not yet collected</span></div>
+    <div class="mstat"><b>$4,210</b><span>Paid out to you this year</span></div>
+    <div class="mstat"><b>86</b><span>New customers through HelpingHands</span></div>
+  </div>
+
+  <div class="queue">
+    <div class="q-head">
+      <div class="q-code">Code</div>
+      <div class="q-items">Items</div>
+      <div class="q-when">Collect by</div>
+      <div style="width:110px"></div>
+    </div>
+    <div class="q-row">
+      <div class="q-code">K4 7Q</div>
+      <div class="q-items">Diapers size 2 · Week of groceries</div>
+      <div class="q-when">Tue, Oct 14</div>
+      <button class="q-act">Mark collected</button>
+    </div>
+    <div class="q-row">
+      <div class="q-code">R2 8M</div>
+      <div class="q-items">Produce bundle · Open amount $40</div>
+      <div class="q-when">Wed, Oct 15</div>
+      <button class="q-act">Mark collected</button>
+    </div>
+    <div class="q-row">
+      <div class="q-code">B9 1T</div>
+      <div class="q-items">Infant formula ×2</div>
+      <div class="q-when">Fri, Oct 17</div>
+      <button class="q-act">Mark collected</button>
+    </div>
+    <div class="q-row">
+      <div class="q-code">H3 4C</div>
+      <div class="q-items">Week of groceries, family of five</div>
+      <div class="q-when">Collected 11:40am</div>
+      <button class="q-act done">Paid Tuesday</button>
+    </div>
+  </div>
+
+  <div class="note">
+    <h4>What signing up asks of you</h4>
+    <p>A business licence number, a bank account for payout, and a list of what you're willing to stock. No new hardware and no new register. A code is just an order number you look up in the app on any phone. Nothing about a pickup should look different to the person in line behind them.</p>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-pri">Register your business</button>
+    <button class="btn btn-sec" data-v="shops">See other shops</button>
+  </div>
+</section>
+
+</div>
+
+<script>
+  const views = document.querySelectorAll('.view');
+  const navBtns = document.querySelectorAll('.nav-links button');
+  const navFor = {board:'board', shops:'shops', 'shop-detail':'shops', pass:'pass', merchant:'merchant'};
+
+  function go(name){
+    views.forEach(v => v.classList.toggle('on', v.id === 'v' + '-' + name));
+    const active = navFor[name];
+    navBtns.forEach(b => b.classList.toggle('on', b.dataset.v === active));
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+  document.querySelectorAll('[data-v]').forEach(el =>
+    el.addEventListener('click', e => { e.stopPropagation(); go(el.dataset.v); })
+  );
+
+  function group(sel){
+    const els = document.querySelectorAll(sel);
+    els.forEach(el => el.addEventListener('click', () => {
+      els.forEach(x => x.classList.remove('on'));
+      el.classList.add('on');
+    }));
+  }
+  group('.chips .chip');
+
+  document.querySelectorAll('.add').forEach(b =>
+    b.addEventListener('click', () => {
+      b.classList.toggle('in');
+      b.textContent = b.classList.contains('in') ? 'Added' : 'Add';
+    })
+  );
+  document.querySelectorAll('.q-act').forEach(b =>
+    b.addEventListener('click', () => {
+      if(b.classList.contains('done')) return;
+      b.classList.add('done');
+      b.textContent = 'Collected';
+    })
+  );
+</script>
+</body>
+</html>
